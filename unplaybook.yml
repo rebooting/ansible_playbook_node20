@@ -1,0 +1,20 @@
+---
+  - name: "generic playbook"
+    hosts: localhost
+    connection: local 
+    vars: 
+      node_version: v20.2.0
+    
+
+
+    tasks:
+      - name: delete node
+        file:
+          path="{{ansible_env.HOME}}/node-{{ node_version }}-linux-x64"
+          state=absent
+      - name: PATH
+        ansible.builtin.lineinfile:
+          path: "{{ansible_env.HOME}}/.bashrc"
+          regexp: '^export PATH=$HOME/node-{{ node_version }}-linux-x64/bin:$PATH'
+          line: export PATH=$HOME/node-{{ node_version }}-linux-x64/bin:$PATH
+          state: absent

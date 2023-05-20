@@ -1,0 +1,24 @@
+---
+  - name: "generic playbook"
+    hosts: localhost
+    connection: local 
+    vars: 
+      node_version: v20.2.0
+
+    tasks:
+      
+      - name: download node
+        get_url:
+          url: https://nodejs.org/dist/{{ node_version }}/node-{{ node_version }}-linux-x64.tar.xz
+          dest: /tmp/node-linux-x64.tar.xz
+          mode: '0444'
+      - name: unpack node
+        shell: "tar xf /tmp/node-linux-x64.tar.xz --directory {{ansible_env.HOME}}"
+      - name: PATH
+        ansible.builtin.lineinfile:
+          path: "{{ansible_env.HOME}}/.bashrc"
+          regexp: '^export PATH=$HOME/node-{{ node_version }}-linux-x64/bin:$PATH'
+          line: export PATH=$HOME/node-{{ node_version }}-linux-x64/bin:$PATH
+          state: present
+
+## ----------------------
